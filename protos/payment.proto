@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+option go_package = "https://gitlab.ozon.dev/SantaRiver/homework-3/protos";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "order.proto";
+
+message Payment {
+  int64 ID = 1;
+  string UUID = 2;
+  Order Order = 3;
+  TotalPrice TotalPrice = 4;
+  PaymentStatus Status = 5;
+  google.protobuf.Timestamp CreatedAt = 6;
+  google.protobuf.Timestamp UpdatedAt = 7;
+}
+
+message PaymentResponse {
+  Payment Payment = 1;
+}
+
+message PaymentCreateRequest {
+  int64 OrderID = 1;
+}
+
+message PaymentStatusRequest {
+  int64 ID = 1;
+  PaymentStatus Status = 2;
+}
+
+message PaymentRequest {
+  int64 ID = 1;
+}
+
+enum PaymentStatus {
+  WAIT = 0;
+  SUCCESS = 1;
+  FAILED = 2;
+}
+
+service PaymentService {
+  rpc CreatePayment(PaymentCreateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/payments"
+      body: "*"
+    };
+  }
+  rpc GetPayment(PaymentRequest) returns (PaymentResponse) {
+    option (google.api.http) = {
+      get: "/payments/{ID}"
+    };
+  }
+  rpc PaymentSuccess(PaymentStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      get: "/payments/{ID}/success"
+    };
+  }
+  rpc PaymentFailed(PaymentStatusRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      get: "/payments/{ID}/failed"
+    };
+  }
+
+}

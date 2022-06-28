@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+option go_package = "https://gitlab.ozon.dev/SantaRiver/homework-3/protos";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "product.proto";
+import "user.proto";
+
+message Basket {
+  int64 ID = 1;
+  User User = 2;
+  repeated Product Products = 3;
+  repeated Count Counter = 4;
+  float TotalPrice = 5;
+  google.protobuf.Timestamp CreatedAt = 6;
+  google.protobuf.Timestamp UpdatedAt = 7;
+}
+
+message Count {
+  int64 ID = 1;
+  int64 Count = 2;
+}
+
+message BasketResponse {
+  Basket Basket = 1;
+}
+
+message BasketProductRequest {
+  Product Product = 1;
+  User User = 2;
+}
+
+service BasketService {
+  rpc AddProduct(BasketProductRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/basket/add"
+      body: "*"
+    };
+  }
+  rpc DeleteProduct(BasketProductRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/basket/delete"
+      body: "*"
+    };
+  }
+  rpc GetBasket(User) returns (BasketResponse) {
+    option (google.api.http) = {
+      get: "/basket"
+    };
+  }
+  rpc ClearBasket(User) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/basket"
+    };
+  }
+}

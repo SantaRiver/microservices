@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+option go_package = "https://gitlab.ozon.dev/SantaRiver/homework-3/protos";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message Product {
+  int64 ID = 1;
+  string Name = 2;
+  string Description = 3;
+  float Price = 4;
+  string Image = 6;
+  string Category = 7;
+  string Subcategory = 8;
+  string Brand = 9;
+  string Model = 10;
+  string Color = 11;
+  string Size = 12;
+  string Material = 13;
+  string Country = 14;
+  google.protobuf.Timestamp CreatedAt = 15;
+  google.protobuf.Timestamp UpdatedAt = 16;
+}
+
+message ProductResponse {
+  Product Product = 1;
+}
+
+message ProductListResponse {
+  repeated Product Products = 1;
+}
+
+service ProductService {
+  rpc CreateProduct(Product) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/product"
+      body: "*"
+    };
+  }
+  rpc UpdateProduct(Product) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/Product"
+      body: "*"
+    };
+  }
+  rpc GetProduct(Product) returns (ProductResponse) {
+    option (google.api.http) = {
+      get: "/Product/{ID}"
+    };
+  }
+  rpc GetProductList(Product) returns (ProductListResponse) {
+    option (google.api.http) = {
+      get: "/Product"
+    };
+  }
+  rpc DeleteProduct(Product) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/Product/{ID}"
+    };
+  }
+}

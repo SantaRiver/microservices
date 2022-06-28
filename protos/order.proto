@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+option go_package = "https://gitlab.ozon.dev/SantaRiver/homework-3/protos";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "user.proto";
+import "basket.proto";
+
+message Order {
+  int64 ID = 1;
+  string UUID = 2;
+  User User = 3;
+  Basket Basket = 4;
+  OrderStatus Status = 5;
+  TotalPrice TotalPrice = 6;
+  string ErrorMessage = 7;
+  google.protobuf.Timestamp CreatedAt = 8;
+  google.protobuf.Timestamp UpdatedAt = 9;
+}
+
+message OrderResponse {
+  Order Order = 1;
+}
+
+enum OrderStatus {
+  CREATED = 0;
+  PENDING = 1;
+  WAITING_FOR_PAYMENT = 2;
+  PAID = 3;
+  CONFIRMED = 4;
+  CANCELLED = 5;
+}
+
+enum Currency {
+  RUB = 0;
+  USD = 1;
+  EUR = 2;
+}
+
+message TotalPrice {
+  float Price = 1;
+  Currency Currency = 2;
+}
+
+service OrderService {
+  rpc CreateOrder(Order) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/basket/add"
+      body: "*"
+    };
+  }
+  rpc GetOrder(Order) returns (OrderResponse) {
+    option (google.api.http) = {
+      get: "/basket/{ID}"
+    };
+  }
+  rpc CancelOrder(Order) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/basket/cancel"
+    };
+  }
+  rpc ConfirmOrder(Order) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/basket/confirm"
+    };
+  }
+}

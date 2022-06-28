@@ -1,0 +1,2 @@
+goose postgres "host=localhost port=55000 user=postgres password=postgrespw dbname=hm3 sslmode=disable" down
+goose postgres "host=localhost port=55000 user=postgres password=postgrespw dbname=hm3 sslmode=disable" status

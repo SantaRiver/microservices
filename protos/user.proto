@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+option go_package = "https://gitlab.ozon.dev/SantaRiver/homework-3/protos";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+enum UserType {
+  TYPE_ADMIN = 0;
+  TYPE_CUSTOMER = 1;
+  TYPE_SELLER = 2;
+}
+
+message User {
+  int64 ID = 1;
+  string Name = 2;
+  string Surname = 3;
+  string Patronymic = 4;
+  google.protobuf.Timestamp Birthday = 5;
+  UserType Type = 6;
+}
+
+message UserResponse {
+  User User = 1;
+}
+
+message UserListResponse {
+  repeated User Users = 1;
+}
+
+service UserService {
+  rpc CreateUser(User) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/user"
+      body: "*"
+    };
+  }
+  rpc UpdateUser(User) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/user"
+      body: "*"
+    };
+  }
+  rpc GetUser(User) returns (UserResponse) {
+    option (google.api.http) = {
+      get: "/user/{ID}"
+    };
+  }
+  rpc GetUserList(User) returns (UserListResponse) {
+    option (google.api.http) = {
+      get: "/user"
+    };
+  }
+  rpc DeleteUser(User) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/user/{ID}"
+    };
+  }
+}
